@@ -1,3 +1,4 @@
+from tkinter.ttk import Style
 from botbuilder.dialogs import (
     ComponentDialog,
     WaterfallDialog,
@@ -14,6 +15,7 @@ from botbuilder.dialogs.prompts import (
     PromptValidatorContext,
 )
 from botbuilder.dialogs.choices import Choice
+from botbuilder.dialogs.choices.list_style import ListStyle
 from botbuilder.core import MessageFactory, UserState
 
 from weather.data_models import PatientDemographics
@@ -154,12 +156,18 @@ class TriageDialog(ComponentDialog):
         gender =  step_context.values["gender"]
         result = await InfermedicaApi.get_risk_factors(age, gender)
        
+        choices = []
+        for rf in result:
+            choices.append(rf["common_name"])
+
         await step_context.context.send_activity(MessageFactory.text(result))
         return await step_context.prompt(
             ChoicePrompt.__name__,
            PromptOptions(
-                prompt=MessageFactory.text("Is there anything else bothering you?"),
-                choices=[Choice("Female"), Choice("Male")],
+                prompt=MessageFactory.text("Please select all the risk factors that apply to you."),
+                choices=choices,
+                style=ListStyle.hero_card
+                
             )
         )
 
