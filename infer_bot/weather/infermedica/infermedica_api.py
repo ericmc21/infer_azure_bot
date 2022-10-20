@@ -4,17 +4,23 @@ import aiohttp
 
 from dotenv import load_dotenv
 from requests import head
+from config import DefaultConfig
+
 
 # POST request
-load_dotenv(".env")
+import os
+from dotenv import load_dotenv
+load_dotenv()
+APP_ID = os.environ["APP_ID"]
+APP_KEY = os.environ["APP_KEY"]
+URL = os.environ["API_URL"]
 
-APP_ID = os.getenv("APP_ID")
-APP_KEY = os.getenv("APP_KEY")
-URL = os.getenv("API_URL")
 
 class InfermedicaApi:
+
     
- async def parse(age, gender, utterance):
+    async def parse(age, gender, utterance):
+       
         headers={"App-Id": APP_ID, "App-Key": APP_KEY}
         async with aiohttp.ClientSession(headers=headers) as session:
             async with session.post(
@@ -22,7 +28,7 @@ class InfermedicaApi:
             ) as resp:
                 return await resp.json()
 
-async def get_risk_factors(age, gender):
+    async def get_risk_factors(age, gender):
         headers={"App-Id": APP_ID, "App-Key": APP_KEY}
         async with aiohttp.ClientSession(headers=headers) as session:
             async with session.post(
