@@ -150,7 +150,7 @@ class TriageDialog(ComponentDialog):
         self, step_context: WaterfallStepContext
 
     ) -> DialogTurnResult:
-        age =  step_context.values["age"]
+        age =  int(step_context.values["age"])
         gender =  step_context.values["gender"]
         result = await InfermedicaApi.get_risk_factors(age, gender)
        
